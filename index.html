@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f0e8">
+  <meta name="description" content="Nudgeboard keeps every follow-up you are waiting on in sight.">
+  <title>Nudgeboard | Keep the loop moving</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="./" aria-label="Nudgeboard home">
+        <span class="brand-mark" aria-hidden="true">↗</span>
+        <span>Nudgeboard</span>
+      </a>
+      <p class="sidebar-kicker">A calmer way to remember<br>what is still in motion.</p>
+      <nav class="nav" aria-label="Main navigation">
+        <button class="nav-item is-active" data-view="all"><span class="nav-icon">◌</span>All follow-ups <span class="nav-count" id="all-count">0</span></button>
+        <button class="nav-item" data-view="due"><span class="nav-icon">◷</span>Due soon <span class="nav-count" id="due-count">0</span></button>
+        <button class="nav-item" data-view="waiting"><span class="nav-icon">○</span>Waiting on others <span class="nav-count" id="waiting-count">0</span></button>
+        <button class="nav-item" data-view="done"><span class="nav-icon">✓</span>Closed loop <span class="nav-count" id="done-count">0</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="privacy-note"><span class="lock-icon">⌑</span><div><strong>Private by default</strong><p>Your board stays in this browser.</p></div></div>
+        <div class="sidebar-actions"><button class="text-button" id="export-button">Export</button><button class="text-button" id="import-button">Import</button><input type="file" id="import-input" accept="application/json" hidden></div>
+        <p class="version">NUDGEBOARD / 01</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark" aria-hidden="true">↗</span> Nudgeboard</div>
+        <div class="topbar-meta"><span class="pulse"></span><span id="sync-label">Saved locally</span><span class="divider"></span><span id="today-label"></span></div>
+      </header>
+
+      <section class="hero">
+        <div><p class="eyebrow">Your open loops</p><h1>Keep the loop<br><em>moving.</em></h1></div>
+        <div class="hero-copy"><p>Capture the things you are waiting on, then give them a gentle next nudge. Less mental juggling. More forward motion.</p><button class="primary-button" id="add-button"><span>+</span> Add a follow-up</button></div>
+      </section>
+
+      <section class="board-section" aria-label="Follow-ups">
+        <div class="section-heading"><div><h2 id="view-title">All follow-ups</h2><p id="view-subtitle">Everything still in motion.</p></div><div class="board-tools"><label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Search follow-ups" aria-label="Search follow-ups"><button class="clear-search" id="clear-search" type="button" aria-label="Clear search" hidden>×</button></label><button class="filter-button" id="filter-button" type="button" aria-expanded="false">Filter <span id="filter-label">all</span> <span aria-hidden="true">⌄</span></button></div></div>
+        <div class="filter-menu" id="filter-menu" hidden><button data-filter="all" class="is-selected">All types</button><button data-filter="people">People</button><button data-filter="work">Work</button><button data-filter="life">Life admin</button></div>
+        <div class="list-header"><span>FOLLOW-UP</span><span>NEXT NUDGE</span><span>STATUS</span><span></span></div>
+        <div class="follow-up-list" id="follow-up-list"></div>
+        <div class="empty-state" id="empty-state" hidden><div class="empty-icon">↗</div><h3 id="empty-title">Start with one open loop.</h3><p id="empty-copy">Capture the next reply, decision, or errand you do not want to keep carrying in your head.</p><button class="secondary-button" id="empty-add-button">Add a follow-up</button></div>
+      </section>
+      <footer class="main-footer"><span>Made for the things that fall between the cracks.</span><span><kbd>N</kbd> new follow-up</span></footer>
+    </main>
+  </div>
+
+  <dialog class="modal" id="follow-up-modal">
+    <form method="dialog" id="follow-up-form">
+      <div class="modal-header"><div><p class="eyebrow" id="modal-eyebrow">New open loop</p><h2 id="modal-title">Add a follow-up</h2></div><button class="close-button" id="close-modal" type="button" aria-label="Close">×</button></div>
+      <label class="field-label" for="title-input">What are you waiting on?<input id="title-input" name="title" required maxlength="100" placeholder="e.g. Jamie to send the revised quote"></label>
+      <div class="form-grid"><label class="field-label" for="person-input">Person or place<input id="person-input" name="person" maxlength="60" placeholder="e.g. Jamie · Acme Co."></label><label class="field-label" for="date-input">Nudge on<input id="date-input" name="date" type="date" required></label></div>
+      <div class="form-grid"><label class="field-label" for="category-input">Area<select id="category-input" name="category"><option value="people">People</option><option value="work">Work</option><option value="life">Life admin</option></select></label><label class="field-label" for="note-input">Context <span>(optional)</span><input id="note-input" name="note" maxlength="120" placeholder="What is the next small move?"></label></div>
+      <div class="modal-actions"><button class="secondary-button" id="cancel-modal" type="button">Cancel</button><button class="primary-button" id="save-button" type="submit">Save follow-up</button></div>
+    </form>
+  </dialog>
+  <dialog class="modal confirm-modal" id="confirm-modal" aria-labelledby="confirm-title" aria-describedby="confirm-copy">
+    <div class="confirm-content">
+      <p class="eyebrow">Close the loop</p>
+      <h2 id="confirm-title">Delete this follow-up?</h2>
+      <p id="confirm-copy">This will remove the follow-up from your board.</p>
+      <div class="modal-actions"><button class="secondary-button" id="cancel-confirm" type="button">Keep it</button><button class="danger-button" id="confirm-delete" type="button">Delete follow-up</button></div>
+    </div>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
