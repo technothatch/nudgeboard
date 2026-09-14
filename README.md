@@ -16,6 +16,8 @@ Then visit `http://localhost:8000`.
 
 The included workflow at `.github/workflows/deploy-pages.yml` deploys the repository on every push to `main`.
 
+Live site: https://technothatch.github.io/nudgeboard/
+
 1. Push the repository to GitHub.
 2. In **Settings → Pages**, set the source to **GitHub Actions**.
 3. Push to `main` or run **Deploy static site to GitHub Pages** from the Actions tab.
